@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'map.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,30 +25,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: const Home(),
-    );
-  }
-}
-
-class Home extends StatelessWidget {
-  const Home({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tela Inicial'),
-      ),
-      body: Container(
-        height: MediaQuery.of(context).size.height, // Define uma altura fixa
-        child: const GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: LatLng(-22.832784023079014, -47.05114017100681),
-            zoom: 15.0,
-          ),
-          mapType: MapType.normal,
-        ),
-      ),
+      home: const MapScreen(),
     );
   }
 }
