@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'map.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  /*FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app.icon');
+  final InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);*/
   await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyBrNZHeIgQ3f5-P9Gxbcsc-WDq-QjQtEh0",
