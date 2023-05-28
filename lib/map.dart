@@ -36,7 +36,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    //requestLocationPermission(); Permissão de localização
+    requestLocationPermission(); //Permissão de localização
 
     dados.getRegisters().listen((QuerySnapshot snapshot) { // Pega os registros do firebase
       List<WeightedLatLng> data = [];
@@ -56,7 +56,7 @@ class _MapScreenState extends State<MapScreen> {
       });
     });
   }
-/*
+
   void requestLocationPermission() async {
     LocationPermission permission;
 
@@ -96,6 +96,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void showNotification() async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'local_ruidoso',
         'Alerta de local ruídoso',
@@ -112,7 +113,7 @@ class _MapScreenState extends State<MapScreen> {
 
 
   }
-*/
+
 
   List<Map<double, MaterialColor>> gradients =[ // Lista de gradientes para ser usado no heatmap;
     HeatMapOptions.defaultGradient,
