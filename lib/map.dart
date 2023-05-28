@@ -12,6 +12,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 double SPL_MIN = 30;
 double SPL_MAX = 130;
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 class Dados { // Pega os registros no banco de dados de forma constante/instantânea
   Stream<QuerySnapshot> getRegisters() {
@@ -96,22 +97,16 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void showNotification() async {
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'local_ruidoso',
         'Alerta de local ruídoso',
         importance: Importance.high,
         priority: Priority.high
     );
-
     const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-
     const String notTitle = 'Atenção';
     const String notBody = 'Próximo a local ruidoso';
-
     await flutterLocalNotificationsPlugin.show(0, notTitle, notBody, platformChannelSpecifics);
-
-
   }
 
 
@@ -142,9 +137,6 @@ class _MapScreenState extends State<MapScreen> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tela Inicial'),
-      ),
       body: Center(
         child: Container(child:map),
       ),

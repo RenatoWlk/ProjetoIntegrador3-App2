@@ -6,10 +6,12 @@ import 'map.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app.icon');
+  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
   final InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyBrNZHeIgQ3f5-P9Gxbcsc-WDq-QjQtEh0",
@@ -17,6 +19,7 @@ void main() async {
       messagingSenderId: "287105807681",
       projectId: "projeto-integrador-3-234e8",
   ),);
+
   runApp(const App());
 }
 
