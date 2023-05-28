@@ -31,7 +31,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Aplicativo 2',
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
+        primarySwatch: Colors.lightBlue,
       ),
       home: const MapScreen(),
     );

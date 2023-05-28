@@ -10,8 +10,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
 
-double SPL_MIN = 30;
-double SPL_MAX = 130;
+double SPL_MIN = 40;
+double SPL_MAX = 110;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 class Dados { // Pega os registros no banco de dados de forma constante/instantânea
@@ -47,16 +47,18 @@ class _MapScreenState extends State<MapScreen> {
         double normalizedSPL = (splValue - SPL_MIN) / (SPL_MAX - SPL_MIN);
         GeoPoint geoPoint = dataMap['Localização']; // Extrai a localização
         LatLng latLng = LatLng(geoPoint.latitude, geoPoint.longitude);
-
         //print('Latitude: ${latLng.latitude}, Longitude: ${latLng.longitude}, SPL: $splValue'); pra saber se tava pegando a localização direito;
-
-        data.add(WeightedLatLng(latLng, splValue)); // Objeto que representa um ponto no mapa com valor ponderado
+        data.add(WeightedLatLng(latLng, normalizedSPL)); // Objeto que representa um ponto no mapa com valor ponderado
       }
       setState((){
         heatmapData = data; // Atualiza a visualização do mapa com os dados do heatmap
       });
     });
   }
+  List<Map<double, MaterialColor>> gradients =[ // Lista de gradientes para ser usado no heatmap;
+    {0.25: Colors.blue, 0.55: Colors.yellow, 0.85: Colors.orange, 1.0: Colors.red}
+  ];
+  var index = 0;
 
   void requestLocationPermission() async {
     LocationPermission permission;
@@ -110,11 +112,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
 
-  List<Map<double, MaterialColor>> gradients =[ // Lista de gradientes para ser usado no heatmap;
-    HeatMapOptions.defaultGradient,
-    {0.25: Colors.blue, 0.55: Colors.red, 0.85: Colors.pink, 1.0: Colors.purple}
-  ];
-  var index = 0;
+
 
   @override
   Widget build(BuildContext context) {
