@@ -28,6 +28,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.example.pi3_app2.pi3_app2"
+    compileSdkVersion 33
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 

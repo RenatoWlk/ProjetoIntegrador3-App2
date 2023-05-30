@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 
 
@@ -38,6 +40,7 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
     requestLocationPermission(); //Permissão de localização
+    requestNotification();
 
     dados.getRegisters().listen((QuerySnapshot snapshot) { // Pega os registros do firebase
       List<WeightedLatLng> data = [];
@@ -75,6 +78,20 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  void requestNotification() async{
+    var _permissionNotification = await Permission.notification.status;
+
+    if (_permissionNotification != PermissionStatus.granted){
+      PermissionStatus permissionStatus = await Permission.notification.request();
+
+      _permissionNotification = permissionStatus;
+
+    } else {
+      print("passou");
+    }
+
+  }
+
   void startLocationTracking() {
     Geolocator.getPositionStream().listen((Position position) {
       double latitude = position.latitude;
@@ -85,10 +102,13 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void checkNoisyRegion(double latitude, double longitude) {
-    List<LatLng> noisyRegions = [];
+    List<LatLng> noisyRegions = [LatLng(-22.83727583, 47.04749566)];
 
     for (LatLng region in noisyRegions) {
       double distance = Geolocator.distanceBetween(latitude, longitude, region.latitude, region.longitude);
+      print("localização bd: $region"); // ERRO: essas coordenadas tão dando em uma ilha de madagascar O_o https://imgur.com/xjQkY2g
+      print(distance); // resultado da função *certo!
+      print('latitude: $latitude longitude: $longitude'); //coordenadas usuario *certo!
       double distanceLimit = 50;
 
       if (distance <= distanceLimit){
@@ -98,7 +118,7 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  void showNotification() async {
+  void showNotification() async { // *certo!
     const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'local_ruidoso',
         'Alerta de local ruídoso',
