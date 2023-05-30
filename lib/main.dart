@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'map.dart';
 
@@ -33,41 +32,8 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
+      debugShowCheckedModeBanner: false,
       home: const MapScreen(),
     );
   }
 }
-
-/* pra deixar salvo como eu peguei os dados do banco na ultima versão
-
-          children: [
-            StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('alerts').snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return const Text('Ocorreu um erro');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                }
-
-                return ListView(
-                  shrinkWrap: true,
-                  children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-                    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(data['Data'].seconds * 1000);
-                    GeoPoint? location = data['Localização'] as GeoPoint?;
-                    String formattedLocation = location != null
-                        ? 'Latitude: ${location.latitude}, Longitude: ${location.longitude}'
-                        : 'Localização não disponível';
-                    return ListTile(
-                      title: Text(dateTime.toString()),
-                      subtitle: Text(formattedLocation),
-                    );
-                  }).toList(),
-                );
-              },
-            )
-          ],
- */
