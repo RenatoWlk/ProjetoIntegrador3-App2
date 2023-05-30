@@ -50,7 +50,7 @@ class _MapScreenState extends State<MapScreen> {
         double normalizedSPL = (splValue - SPL_MIN) / (SPL_MAX - SPL_MIN);
         GeoPoint geoPoint = dataMap['Localização']; // Extrai a localização
         LatLng latLng = LatLng(geoPoint.latitude, geoPoint.longitude);
-        //print('Latitude: ${latLng.latitude}, Longitude: ${latLng.longitude}, SPL: $splValue'); pra saber se tava pegando a localização direito;
+        print('Latitude: ${latLng.latitude}, Longitude: ${latLng.longitude}, SPL: $splValue'); //pra saber se tava pegando a localização direito;
         data.add(WeightedLatLng(latLng, normalizedSPL)); // Objeto que representa um ponto no mapa com valor ponderado
       }
       setState((){
@@ -97,19 +97,19 @@ class _MapScreenState extends State<MapScreen> {
       double latitude = position.latitude;
       double longitude = position.longitude;
       //print('Latitude: $latitude, Longitude: $longitude');
-      checkNoisyRegion(latitude, longitude);
+      checkNoisyRegion(latitude, longitude,heatmapData);
     });
   }
 
-  void checkNoisyRegion(double latitude, double longitude) {
-    List<LatLng> noisyRegions = [LatLng(-22.83727583, -47.04749566)];
+  void checkNoisyRegion(double latitude, double longitude, List<WeightedLatLng> heatmapData) {
 
-    for (LatLng region in noisyRegions) {
+    for (WeightedLatLng dataPoint in heatmapData) {
+      LatLng region = dataPoint.latLng;
       double distance = Geolocator.distanceBetween(latitude, longitude, region.latitude, region.longitude);
-      print("localização bd: $region"); // coordenadas q eu coloquei na lista acima *é pra pegar do bd
+      print("localização bd: $region");
       print(distance); // resultado da função *certo!
       print('latitude: $latitude longitude: $longitude'); //coordenadas usuario *certo!
-      double distanceLimit = 50;
+      double distanceLimit = 5;
 
       if (distance <= distanceLimit){
         showNotification();
