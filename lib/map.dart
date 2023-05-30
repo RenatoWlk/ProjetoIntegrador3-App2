@@ -102,11 +102,11 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void checkNoisyRegion(double latitude, double longitude) {
-    List<LatLng> noisyRegions = [LatLng(-22.83727583, 47.04749566)];
+    List<LatLng> noisyRegions = [LatLng(-22.83727583, -47.04749566)];
 
     for (LatLng region in noisyRegions) {
       double distance = Geolocator.distanceBetween(latitude, longitude, region.latitude, region.longitude);
-      print("localização bd: $region"); // ERRO: essas coordenadas tão dando em uma ilha de madagascar O_o https://imgur.com/xjQkY2g
+      print("localização bd: $region"); // coordenadas q eu coloquei na lista acima *é pra pegar do bd
       print(distance); // resultado da função *certo!
       print('latitude: $latitude longitude: $longitude'); //coordenadas usuario *certo!
       double distanceLimit = 50;
