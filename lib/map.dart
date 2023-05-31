@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_heatmap/flutter_map_heatmap.dart';
 import 'package:latlong2/latlong.dart';
-import 'notification.dart';
+
 import 'data.dart';
+import 'notification.dart';
 
-double SPL_MIN = 40;
-double SPL_MAX = 110;
-LatLngBounds bounds = LatLngBounds(LatLng(-22.832709815152366, -47.060968929234015), LatLng(-22.83374460764762, -47.032899552306624));
-
+const double SPL_MIN = 40;
+const double SPL_MAX = 110;
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -27,34 +26,38 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
+    getData();
+  }
 
+  void getData() {
     double splValue, normalizedSPL;
     GeoPoint geoPoint;
     LatLng latLng;
+    Map<String, dynamic> dataMap;
     data.getRegisters().listen((QuerySnapshot snapshot) {
       // Pega os registros do firebase
       List<WeightedLatLng> data = [];
       for (var doc in snapshot.docs) {
-        var dataMap = doc.data() as Map<String, dynamic>;
-        splValue = dataMap['Média']
-            .toDouble(); // Extrai dos docuimentos a média de SPL
+        dataMap = doc.data() as Map<String, dynamic>;
+        // Extrai dos documentos a média de SPL
+        splValue = dataMap['Média'].toDouble();
+        // Normaliza o valor do SPL
         normalizedSPL = (splValue - SPL_MIN) / (SPL_MAX - SPL_MIN);
-        geoPoint = dataMap['Localização']; // Extrai a localização
+        // Extrai a localização
+        geoPoint = dataMap['Localização'];
         latLng = LatLng(geoPoint.latitude, geoPoint.longitude);
-        data.add(WeightedLatLng(latLng,
-            normalizedSPL)); // Objeto que representa um ponto no mapa com valor ponderado
+        // Objeto que representa um ponto no mapa com valor ponderado
+        data.add(WeightedLatLng(latLng, normalizedSPL));
       }
       setState(() {
-        heatmapData =
-            data; // Atualiza a visualização do mapa com os dados do heatmap
+        heatmapData = data; // Atualiza a visualização do mapa com os dados do heatmap
       });
       notify.requestLocationPermission(heatmapData);
     });
-    print(heatmapData);
   }
 
+  // Lista de gradientes que vão ser usados no Heatmap
   List<Map<double, MaterialColor>> gradients = [
-    // Lista de gradientes para ser usado no heatmap;
     {
       0.25: Colors.blue,
       0.55: Colors.yellow,
@@ -64,11 +67,22 @@ class _MapScreenState extends State<MapScreen> {
   ];
   var index = 0;
 
+  LatLng initialPos   = LatLng(-22.833066128939777, -47.04874298746663);
+  double initialZoom  = 16.0;
+  LatLngBounds bounds = LatLngBounds(
+      LatLng(-22.832709815152366, -47.060968929234015), // esquerda em cima da PUC
+      LatLng(-22.83374460764762, -47.032899552306624)   // direita em baixo da PUC
+  );
+
   @override
   Widget build(BuildContext context) {
     final map = FlutterMap(
-      // Monta o mapa na localização da pucc;
-      options: MapOptions(center: LatLng(-22.83409737601791, -47.04946048469378), zoom: 15.0,maxBounds: bounds ),
+      options: MapOptions(
+        center: initialPos,
+        maxBounds: bounds,
+        zoom: initialZoom,
+        interactiveFlags: InteractiveFlag.drag | InteractiveFlag.pinchZoom | InteractiveFlag.rotate,
+      ),
       children: [
         TileLayer(
           urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",

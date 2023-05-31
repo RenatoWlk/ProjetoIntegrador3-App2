@@ -1,7 +1,9 @@
-import 'package:flutter_map_heatmap/flutter_map_heatmap.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_map_heatmap/flutter_map_heatmap.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class Notify {
@@ -15,22 +17,35 @@ class Notify {
       permission = await Geolocator.requestPermission();
     }
 
-    if (permission == LocationPermission.denied) {
-      print('Permissão de localização negada');
+    if (permission != LocationPermission.denied) {
+      requestNotificationPermission(heatmapData);
     } else {
-      requestNotification(heatmapData);
+      Fluttertoast.showToast(
+        msg: "Aceite a permissão de localização para o aplicativo funcionar corretamente.",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.lightBlue,
+      );
     }
   }
 
-  void requestNotification(List<WeightedLatLng> heatmapData) async{
+  void requestNotificationPermission(List<WeightedLatLng> heatmapData) async{
     var _permissionNotification = await Permission.notification.status;
 
     if (_permissionNotification != PermissionStatus.granted){
       PermissionStatus permissionStatus = await Permission.notification.request();
       _permissionNotification = permissionStatus;
     }
+    
     if (_permissionNotification != PermissionStatus.denied) {
       startLocationTracking(heatmapData);
+    } else {
+      Fluttertoast.showToast(
+        msg: "Aceite a permissão de notificação para o aplicativo funcionar corretamente.",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.lightBlue,
+      );
     }
   }
 
@@ -38,13 +53,11 @@ class Notify {
     Geolocator.getPositionStream().listen((Position position) {
       double latitude = position.latitude;
       double longitude = position.longitude;
-      print('Latitude: $latitude, Longitude: $longitude');
       checkNoisyRegion(latitude, longitude, heatmapData);
     });
   }
 
   void checkNoisyRegion(double latitude, double longitude, List<WeightedLatLng> heatmapData) {
-    print(heatmapData);
     double distance;
     double distanceLimit = 5;
     for (WeightedLatLng dataPoint in heatmapData) {
@@ -68,5 +81,6 @@ class Notify {
     const String notTitle = 'Atenção';
     const String notBody = 'Próximo a local ruidoso';
     await flutterLocalNotificationsPlugin.show(0, notTitle, notBody, platformChannelSpecifics);
+    print("Notificação enviada.");
   }
 }
