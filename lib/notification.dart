@@ -18,18 +18,19 @@ class Notify {
     if (permission == LocationPermission.denied) {
       print('Permissão de localização negada');
     } else {
-      startLocationTracking(heatmapData);
+      requestNotification(heatmapData);
     }
   }
 
-  void requestNotification() async{
+  void requestNotification(List<WeightedLatLng> heatmapData) async{
     var _permissionNotification = await Permission.notification.status;
 
     if (_permissionNotification != PermissionStatus.granted){
       PermissionStatus permissionStatus = await Permission.notification.request();
       _permissionNotification = permissionStatus;
-    } else {
-      print("passou");
+    }
+    if (_permissionNotification != PermissionStatus.denied) {
+      startLocationTracking(heatmapData);
     }
   }
 
@@ -37,18 +38,18 @@ class Notify {
     Geolocator.getPositionStream().listen((Position position) {
       double latitude = position.latitude;
       double longitude = position.longitude;
-      //print('Latitude: $latitude, Longitude: $longitude');
+      print('Latitude: $latitude, Longitude: $longitude');
       checkNoisyRegion(latitude, longitude, heatmapData);
     });
   }
 
   void checkNoisyRegion(double latitude, double longitude, List<WeightedLatLng> heatmapData) {
+    print(heatmapData);
     double distance;
     double distanceLimit = 5;
     for (WeightedLatLng dataPoint in heatmapData) {
       LatLng region = dataPoint.latLng;
       distance = Geolocator.distanceBetween(latitude, longitude, region.latitude, region.longitude);
-
       if (distance <= distanceLimit){
         showNotification();
         break;
