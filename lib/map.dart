@@ -67,19 +67,18 @@ class _MapScreenState extends State<MapScreen> {
   ];
   var index = 0;
 
-  LatLng initialPos   = LatLng(-22.833066128939777, -47.04874298746663);
-  double initialZoom  = 16.0;
-  LatLngBounds bounds = LatLngBounds(
-      LatLng(-22.832709815152366, -47.060968929234015), // esquerda em cima da PUC
-      LatLng(-22.83374460764762, -47.032899552306624)   // direita em baixo da PUC
-  );
+  LatLng initialPos   = LatLng(-22.833846358163328, -47.05151268341514);
+  double initialZoom  = 17.5;
+  //LatLngBounds bounds = LatLngBounds(
+    //  LatLng(-22.832709815152366, -47.060968929234015), // esquerda em cima da PUC
+    //    LatLng(-22.83374460764762, -47.032899552306624)   // direita em baixo da PUC
+  //);
 
   @override
   Widget build(BuildContext context) {
     final map = FlutterMap(
       options: MapOptions(
         center: initialPos,
-        maxBounds: bounds,
         zoom: initialZoom,
         interactiveFlags: InteractiveFlag.drag | InteractiveFlag.pinchZoom | InteractiveFlag.rotate,
       ),
